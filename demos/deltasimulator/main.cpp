@@ -1,5 +1,4 @@
 #include "rabi_demo.h"
-#include "/workdir/demos/deltasimulator/sc_hal_block.hpp"
 #include <iostream>
 #include <systemc>
 #include <limits>
@@ -26,22 +25,6 @@ int sc_main(__attribute__((unused)) int argc, __attribute__((unused)) char** arg
   Rabi_Demo rabi("RABI", Tf);
   rabi.clk.bind(clk);
   rabi.rst.bind(rst);
-
-  // The hal block can be configured to include latency.
-  HalBlock hal = HalBlock("HAL", 5);
-  hal.clk.bind(clk);
-  hal.rst.bind(rst);
-  hal.hello();
-
-  // bind output of command sender to input of HAL
-  hal.hal_command_data.bind(rabi.command_sender_1_hal_command_out_data);
-  hal.hal_command_valid.bind(rabi.command_sender_1_hal_command_out_valid);
-  hal.hal_command_ready.bind(rabi.command_sender_1_hal_command_in_ready);
-
-  // bind input of result aggregator to output of HAL
-  hal.hal_result_data.bind(rabi.result_aggregator_0_hal_result_in_data);
-  hal.hal_result_valid.bind(rabi.result_aggregator_0_hal_result_in_valid);
-  hal.hal_result_ready.bind(rabi.result_aggregator_0_hal_result_out_ready);
 
   rst.write(1);
   sc_start(5, SC_NS);

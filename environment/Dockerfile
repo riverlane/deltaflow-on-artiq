@@ -34,7 +34,7 @@ RUN wget https://ftp.snt.utwente.nl/pub/software/gnu/binutils/binutils-2.32.tar.
     make -j ${BUILD_THREADS} && make install
 
 # get misoc and python deps of the same.
-RUN git clone --recurse-submodules https://github.com/m-labs/misoc.git &&\
+RUN git clone https://github.com/m-labs/misoc.git &&\
     git clone --recurse-submodules https://github.com/m-labs/migen.git &&\
     git clone https://github.com/m-labs/asyncserial.git &&\
     cd migen && git checkout 0.9.1 && python3 setup.py install &&\
@@ -55,23 +55,6 @@ RUN wget https://github.com/openrisc/newlib/releases/download/v2.3.0-1/or1k-elf-
 RUN tar xvf or1k-elf-multicore_gcc5.2.0_binutils2.26_newlib2.3.0-1_gdb7.11.tgz
 ENV PATH=/or1k-elf-multicore/bin:${PATH}
 RUN echo $OR1KSIM_HOME >> /etc/ld.so.conf && ldconfig
-
-# math lib - required for the quantum simulator
-RUN git clone https://github.com/vsoftco/qpp.git && cd qpp &&\
-    git checkout v1.2
-ENV QPP_INCLUDE=/qpp/include
-RUN wget https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.bz2 && tar xvf eigen-3.3.7.tar.bz2
-ENV EIGEN_INCLUDE=/eigen-eigen-323c052e1731
-
-# misc additional includes. Add whever you need as loose headers here.
-RUN mkdir misc_inc && cd misc_inc &&\
- wget https://raw.githubusercontent.com/tomparks/path-integral-quantum-simulator/master/src/cpp/sc_vardefs.h
-ENV MISC_INC=/misc_inc
-
-RUN wget https://raw.githubusercontent.com/enjoy-digital/litex/master/litex_setup.py
-RUN chmod +x litex_setup.py
-RUN ./litex_setup.py init install
-
 
 # Hotfix for installing projectq https://github.com/ProjectQ-Framework/ProjectQ/issues/323
 # pip tries to install pybind11 after projectq is installed,

@@ -6,6 +6,11 @@ FAQ
 
   We’re happy to speak about that, send an email to deltaflow@riverlane.com
 
+* **Where can I find more information about Riverlane's activities?**
+
+  You can follow us on Twitter and Linkedin. You can also signup via our 
+  website to receive our newsletter and watch our videos on YouTube.
+
 * **How can I contribute to Deltaflow?** 
 
   * If you have a few minutes: It would be incredibly helpful to us if you
@@ -46,7 +51,7 @@ FAQ
   Your CPU nodes will run on server-grade hardware, and we add no overhead
   to fast feedback loops on the FPGA, so as fast as you can make it go!
 
-* **Can I use python libraries?**
+* **Can I use Python libraries?**
 
   In simulation, you can use anything you have installed!
   When the first commercial devices are available, we will make a process

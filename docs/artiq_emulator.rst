@@ -2,8 +2,8 @@ ARTIQ Emulator
 ==============
 
 To test our Rabi-Demo in a realistic scenario we have developed a skeleton ARTIQ Emulator. 
-We have started with a real simple implementation of it, slowly adding more features to make it
-better emulate the real ARTIQ system. 
+We have started with a real simple implementation that we are continuosly improving to emulate 
+at best the real ARTIQ system. 
 
 Please note that, currently, the stand-alone ARTIQ emulator is still in beta, contact us if you would like to get access to the ARTIQ emulator without Deltaflow (deltaflow@riverlane.com).
 
@@ -14,12 +14,13 @@ top of the control stack, down to the digital control ports.
 We have made the following simplifications to make it simpler to understand and maintain:
 
 * We are emulating a single FPGA configuration, with currently no support for the host PC. For the existing ARTIQ-user, 
-  this means that we can't write (yet) kernels that use Remote Call Procedures (RCPs)
+  this means that we can't write (yet) kernels that use Remote Procedure Calls (RPCs)
 
-* We have added backdoor(s) to the various memories to accelerate the reading from external memories. 
-  This means that the amount of time it takes in real life to load your applications will differ from 
-  the timestamps you see in simulation. As we only use them for real long booting steps but not for 
-  general L2 caching operations this won't change the "distance" between two I/O signals.
+* We have added backdoor(s) to the various memories to accelerate not-critical operations. 
+  This means that the amount of time it takes in hardware to load your applications will differ from 
+  the timestamps you see in simulation. As we only use these backdoors for real long booting steps 
+  (but not for general L2 caching operations) this won't change the "distance" between internal critical 
+  signals (e.g. writes/reads to the RTIO block).
 
 * We have frozen our ARTIQ environment to a specific version (in the Nix packages as well) to simplify our
   maintanance

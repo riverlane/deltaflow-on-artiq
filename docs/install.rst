@@ -8,8 +8,10 @@ Supported Platforms
 -------------------
 
 Deltaflow-on-ARTIQ has been tested on Ubuntu 18.04 and 20.04 and on
-MacOS 10.15.15+. 
-It has not been tested on Windows as well as on MacOS 11.0.x.
+MacOS 10.15.15+. For Mac users we recommend to configure your Docker Desktop
+to use at least 4 **CPUs**, 4GB of **Memory** and allow more than 30GB for your 
+**Disk Image size**. 
+Deltaflow-on-ARTIQ has currently not been tested on Windows.
 
 First steps
 -----------
@@ -46,9 +48,9 @@ To summarize the commands:
 
 .. code-block:: console     
 
-     make run-deltagraph
-     make run-deltasimulator
-     make run-kasli-emulator
+    make run-deltagraph
+    make run-deltasimulator
+    make run-kasli-emulator
 
 The latter one will take a significant longer amount of time as it compiles
 and installs all the ARTIQ backend and dependecies. 
@@ -66,7 +68,7 @@ Feel free to clear your environment via:
 
 .. code-block:: console
      
-     make clean
+    make clean
 
 
 .. note::

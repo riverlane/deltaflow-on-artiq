@@ -15,7 +15,7 @@ ln -s /usr/bin/pip3 /usr/bin/pip
 pip install --upgrade pip
 pip install --no-cache-dir -r ./environment/dev_requirements.txt
 
-export PYTHONPATH=${PYTHONPATH}:/workdir
+export PYTHONPATH=${PYTHONPATH}:/workdir:/workdir/deltalanguage:/workdir/deltasimulator
 echo ${PYTHONPATH}
 
 #################### DECLARE VARIABLES ########################################
@@ -24,7 +24,7 @@ echo ${PYTHONPATH}
 # add it to DOCSVERSIONS following a whitespace
 # Make sure dev is the last one as it has the latest version of conf.py
 # TODO: automate this process
-DOCSVERSIONS="v0.3.1 dev"
+DOCSVERSIONS="v0.3.2 dev"
 export DOCSVERSIONS=${DOCSVERSIONS}
 # This variable is defined in docs/Makefile
 # TODO: remover redundant repetition
@@ -60,19 +60,19 @@ for CURRENT_VERSION in ${DOCSVERSIONS}; do
    # build HTML / PDF / EPUB
    # TODO: fix PDF build and add here
    make -C docs html
-   make -C docs pdf
-   make -C docs epub
+   # make -C docs pdf
+   # make -C docs epub
 
    # copy them to docroot
    mkdir -p "${docroot}/${CURRENT_VERSION}"
    rsync -av "docs/${BUILDDIR}/html/" "${docroot}/${CURRENT_VERSION}/"
-   cp "docs/${BUILDDIR}/pdf/target.pdf" \
-      "${docroot}/${CURRENT_VERSION}/${REPO_NAME}-docs-${CURRENT_VERSION}.pdf"
-   cp "docs/${BUILDDIR}/epub/target.epub" \
-      "${docroot}/${CURRENT_VERSION}/${REPO_NAME}-docs-${CURRENT_VERSION}.epub"
+   # cp "docs/${BUILDDIR}/pdf/target.pdf" \
+   #    "${docroot}/${CURRENT_VERSION}/${REPO_NAME}-docs-${CURRENT_VERSION}.pdf"
+   # cp "docs/${BUILDDIR}/epub/target.epub" \
+   #    "${docroot}/${CURRENT_VERSION}/${REPO_NAME}-docs-${CURRENT_VERSION}.epub"
    cp "docs/sphinx-build-html.log" "${docroot}/${CURRENT_VERSION}/"
-   cp "docs/sphinx-build-pdf.log" "${docroot}/${CURRENT_VERSION}/"
-   cp "docs/sphinx-build-epub.log" "${docroot}/${CURRENT_VERSION}/"
+   # cp "docs/sphinx-build-pdf.log" "${docroot}/${CURRENT_VERSION}/"
+   # cp "docs/sphinx-build-epub.log" "${docroot}/${CURRENT_VERSION}/"
 
    make -C docs clean
 done

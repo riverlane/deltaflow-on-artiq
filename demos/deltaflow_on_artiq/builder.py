@@ -13,7 +13,7 @@ from deltasimulator.build_tools.environments import (CPPEnv,
                                                    PythonatorEnv,
                                                    VerilatorEnv,
                                                    WiringEnv)
-from deltasimulator.lib import build_program
+from deltasimulator.lib import generate_wiring
 import time
 
 def finalize_build():
@@ -37,17 +37,17 @@ if __name__ == "__main__":
         )
 
         shutil.copy(
-             "/workdir/demos/common/" + sc_hal_hpp_file,
+             "/workdir/demos/deltaflow_on_artiq/" + sc_hal_hpp_file,
             build_repo + "/" + sc_hal_hpp_file
         )
 
         shutil.copy(
-             "/workdir/demos/common/" + projectq_hal_hpp_file,
+             "/workdir/demos/deltaflow_on_artiq/" + projectq_hal_hpp_file,
             build_repo + "/" + projectq_hal_hpp_file
         )
 
         shutil.copy(
-             "/workdir/demos/common/" + hal_py_file,
+             "/workdir/demos/deltaflow_on_artiq/" + hal_py_file,
             build_repo + "/" + hal_py_file
         )
     except FileExistsError:
@@ -55,11 +55,12 @@ if __name__ == "__main__":
 
     graph, _ = rabi_demo.get_graph()
     dotdf_bytes, program = serialize_graph(graph, name=program_name)
-    
-    node_bodies, node_inits, wiring = build_program(program)
+
+    node_bodies, node_inits, wiring = generate_wiring(program)
 
     # write artifacts to build repository
     for build_artifact_name, build_artifact_data in wiring.items():
+        print (f"writing: {build_artifact_name} into {build_repo}")
         with open(build_repo + f"/{build_artifact_name}", "wb") as f:
             write(build_artifact_data, f)
 

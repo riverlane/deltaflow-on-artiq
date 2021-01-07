@@ -1,12 +1,11 @@
-Deltaflow-on-ARTIQ License
-==========================
-
+License
+=======
 
 GNU Lesser General Public License
 ---------------------------------
 
 *Version 3, 29 June 2007*
-*Copyright © 2007 Free Software Foundation, Inc* <http://fsf.org/>
+*Copyright 2007 Free Software Foundation, Inc* <http://fsf.org/>
 
 Everyone is permitted to copy and distribute verbatim copies
 of this license document, but changing it is not allowed.
@@ -62,14 +61,15 @@ facility is invoked), then you may convey a copy of the modified
 version:
 
 * **a)** under this License, provided that you make a good faith effort to
-ensure that, in the event an Application does not supply the
-function or data, the facility still operates, and performs
-whatever part of its purpose remains meaningful, or
+  ensure that, in the event an Application does not supply the
+  function or data, the facility still operates, and performs
+  whatever part of its purpose remains meaningful, or
 
 * **b)** under the GNU GPL, with none of the additional permissions of
-this License applicable to that copy.
+  this License applicable to that copy.
 
-### 3. Object Code Incorporating Material from Library Header Files
+3. Object Code Incorporating Material from Library Header Files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The object code form of an Application may incorporate material from
 a header file that is part of the Library.  You may convey such object
@@ -79,10 +79,11 @@ layouts and accessors, or small macros, inline functions and templates
 (ten or fewer lines in length), you do both of the following:
 
 * **a)** Give prominent notice with each copy of the object code that the
-Library is used in it and that the Library and its use are
-covered by this License.
+  Library is used in it and that the Library and its use are
+  covered by this License.
+
 * **b)** Accompany the object code with a copy of the GNU GPL and this license
-document.
+  document.
 
 4. Combined Works
 ~~~~~~~~~~~~~~~~~
@@ -114,6 +115,7 @@ the following:
     the Linked Version to produce a modified Combined Work, in the
     manner specified by section 6 of the GNU GPL for conveying
     Corresponding Source.
+
   - **1)** Use a suitable shared library mechanism for linking with the
     Library.  A suitable mechanism is one that **(a)** uses at run time
     a copy of the Library already present on the user's computer

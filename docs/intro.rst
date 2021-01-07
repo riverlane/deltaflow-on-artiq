@@ -163,7 +163,7 @@ At high level the Deltaflow programming can be split in the following steps:
 Step 1: **Programming**
   The user defines and tests compute nodes and data channels
   between them; that constitutes a
-  :py:class:`DeltaGraph` which is the 
+  :py:class:`DeltaGraph` which is the
   central element of the Deltaflow program.
   This stage is done using |Deltalanguage|_.
 

@@ -1,5 +1,5 @@
 Rabi Example
-========
+============
 
 In the current release we, are providing three demos that represents the standard 
 steps that an application developer can take. From experience we know that testing
@@ -10,7 +10,7 @@ Let's use the Rabi Oscillation as an example wich we think we can help in design
 better quantum software.
 
 Step 0: Rabi Oscillation experiment
--------------------
+-----------------------------------
 
 We have selected a simple but powerful example of the capabilities of Deltaflow: a Rabi Oscillation (with a twist). 
 

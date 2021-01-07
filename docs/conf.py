@@ -11,12 +11,14 @@ import sys
 from git import Repo
 
 # add sourcecode to path
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.append(os.path.abspath('..'))
+sys.path.append('../deltalanguage')
+sys.path.append('../deltasimulator')
 
-from setup import (
-    __copyright__,
-    __version__
-)
+from deltalanguage import __version__ as version_deltalanguage
+from deltasimulator import __version__ as version_deltasimulator
+from setup import __copyright__, __version__
+
 
 # -- Project information -----------------------------------------------------
 
@@ -56,6 +58,16 @@ else:
 
 description_ = "Distributed control system for the quantum computer."
 category_ = "control system"
+
+with open('../deltamodels/VERSION', 'r') as file:
+    version_deltamodels = file.read().replace('\n', '')
+
+# Versions of submodules
+rst_epilog = f"""
+.. |version_deltalanguage| replace:: v{version_deltalanguage}
+.. |version_deltasimulator| replace:: v{version_deltasimulator}
+.. |version_deltamodels| replace:: {version_deltamodels}
+"""
 
 # -- General configuration ---------------------------------------------------
 
@@ -266,20 +278,20 @@ today_fmt = "%B %d, %Y"
 epub_basename = 'target'
 
 html_context['downloads'] = list()
-html_context['downloads'].append(
-    (
-        'pdf',
-        '/' + REPO_NAME + '/' + CURRENT_VERSION + '/' +
-        REPO_NAME + '-docs-' + CURRENT_VERSION + '.pdf'
-    )
-)
-html_context['downloads'].append(
-    (
-        'epub',
-        '/' + REPO_NAME + '/' + CURRENT_VERSION + '/' +
-        REPO_NAME + '-docs-' + CURRENT_VERSION + '.epub'
-    )
-)
+# html_context['downloads'].append(
+#     (
+#         'pdf',
+#         '/' + REPO_NAME + '/' + CURRENT_VERSION + '/' +
+#         REPO_NAME + '-docs-' + CURRENT_VERSION + '.pdf'
+#     )
+# )
+# html_context['downloads'].append(
+#     (
+#         'epub',
+#         '/' + REPO_NAME + '/' + CURRENT_VERSION + '/' +
+#         REPO_NAME + '-docs-' + CURRENT_VERSION + '.epub'
+#     )
+# )
 
 ######################## "EDIT ON GITHUB" LINKS ###############################
 

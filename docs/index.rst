@@ -21,6 +21,8 @@ Deltaflow-on-ARTIQ documentation
   hardware_abstraction_layer
   faq
   licenses
+  license
+
 
 Welcome to the documentation for Deltaflow-on-ARTIQ.
 If you use Deltaflow, we would be ever so thankful if you could give
@@ -33,7 +35,7 @@ What is Deltaflow and Deltaflow-on-ARTIQ?
 |Deltaflow| sees the quantum computer as a distributed control system with
 CPUs, FPGAs, analogue units, and qubits working under tight latency
 constraints.
-The Deltaflow language lets the user to define a graph of nodes representing
+The Deltaflow language lets the user define a graph of nodes representing
 the different elements of computation and interconnect them.
 The Deltaflow simulator and runtime take care of mapping a Deltaflow graph
 onto simulated or real hardware respectively.
@@ -47,7 +49,7 @@ It lets you write Deltaflow programmes, run them on a hardware simulator and
 test them on an emulated backend of the popular |ARTIQ|_ control system.
 You can find the corresponding github repo `here <https://github.com/riverlane/deltaflow-on-artiq>`_.
 
-Please find below an architectual diagram that addresses all components
+Please find below an architectural diagram that addresses all components
 individually and provide their relations:
 
 .. image:: figs/deltaflow_overview.png
@@ -79,7 +81,7 @@ individually and provide their relations:
 How can I get started?
 ----------------------
 
-We recomment to follow these steps:
+We recommend to follow these steps:
 
 - Please read our :doc:`intro` to understand better why we are building
   Deltaflow, how it can help you, and how you can use it.
@@ -95,8 +97,7 @@ We recomment to follow these steps:
 
 - [Optional] Get familiar with |Deltasimulator|_ and |Deltamodels|_ by
   following their manuals.
-  At the moment they do not provide in-depth information and meant to be
-  explained later.
+  At the moment they do not provide in-depth information.
 
 - Go through :doc:`examples` to learn about Deltaflow-on-ARTIQ by doing
   the same Rabi Oscillations Demo in 3 different ways:
@@ -115,22 +116,17 @@ We recomment to follow these steps:
 About this release
 ------------------
 
-This release constitutes **Deltaflow-on-ARTIQ v0.3.0** with the following
-components:
+This release of |Deltaflow-on-ARTIQ| |version| has the following components:
 
-+--------------------+-----------+
-| Component          | Version   |
-+====================+===========+
-| |Deltalanguage|_   | v0.3.0    |
-+--------------------+-----------+
-| |Deltasimulator|_  | v0.3.0    |
-+--------------------+-----------+
-| |Deltamodels|_     | v0.3.2    |
-+--------------------+-----------+
-
-.. TODO:: Automate this version extraction from the packages.
-
-.. TODO:: For the public release, refer to the stable versions.
++--------------------+-----------------------------+
+| Component          | Version                     |
++====================+=============================+
+| |Deltalanguage|_   | |version_deltalanguage|     |
++--------------------+-----------------------------+
+| |Deltasimulator|_  | |version_deltasimulator|    |
++--------------------+-----------------------------+
+| |Deltamodels|_     | |version_deltamodels|       |
++--------------------+-----------------------------+
 
 
 .. Links
