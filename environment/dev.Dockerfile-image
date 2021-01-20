@@ -1,0 +1,103 @@
+FROM ubuntu:20.04
+ENV BUILD_THREADS=4
+
+ENV TZ=Europe/London
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+COPY ./environment/apt-list /opt/apt-list
+
+# install all deps. We use a single apt call to improve first-build speed
+# bash line removes lines with comments and newlines.
+RUN apt-get update &&\
+    cat /opt/apt-list | sed 's/#.*$//g' | sed '/^$/d' | tr '\n' ' ' | xargs apt-get install --no-install-recommends -y
+
+# SystemC
+RUN wget https://www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.tar.gz &&\
+    tar xvf systemc-2.3.3.tar.gz && cd systemc-2.3.3 && mkdir build && mkdir /usr/local/systemc-2.3.3 &&\
+    cd build && ../configure --prefix=/usr/local/systemc-2.3.3 CXXFLAGS="-DSC_CPLUSPLUS=201703L -std=c++17" && \
+    make -j ${BUILD_THREADS} && make install
+ENV SYSTEMC_INCLUDE=/usr/local/systemc-2.3.3/include SYSTEMC_LIBDIR=/usr/local/systemc-2.3.3/lib-linux64 SYSTEMC_HOME=/usr/local/systemc-2.3.3
+RUN echo $SYSTEMC_LIBDIR >> /etc/ld.so.conf && ldconfig
+ENV PATH=/root/.local/bin:$PATH
+
+# Verilator
+RUN git clone https://git.veripool.org/git/verilator && \
+    cd verilator && git checkout v4.026 && \
+    autoconf && ./configure && make -j ${BUILD_THREADS} && make install
+
+# MISOC, MIGEN, and DEPS OF SAME
+# binutils and GCC for SoC designs. May need more than just this architecture.
+RUN wget https://ftp.snt.utwente.nl/pub/software/gnu/binutils/binutils-2.32.tar.xz &&\
+    tar xvf binutils-2.32.tar.xz &&\
+    cd binutils-2.32 && mkdir build && cd build &&\
+    ../configure --target=lm32-elf &&\
+    make -j ${BUILD_THREADS} && make install
+
+# get misoc and python deps of the same.
+RUN git clone https://github.com/m-labs/misoc.git &&\
+    git clone --recurse-submodules https://github.com/m-labs/migen.git &&\
+    git clone https://github.com/m-labs/asyncserial.git &&\
+    cd migen && git checkout 0.9.1 && python3 setup.py install &&\
+    python3 -m pip install pyserial && cd /asyncserial && python3 setup.py install
+
+# missing print parens warnings are normal - setuptools looking at too many files
+RUN cd misoc && git checkout 0.12 && python3 setup.py install
+
+# OR1K simulator - the CPU portion of ARTIQ can run here
+RUN git clone https://github.com/openrisc/or1ksim.git
+RUN apt install -y texinfo m4 automake libtool
+RUN cd or1ksim && autoreconf -i && mkdir build && cd build && ../configure && make -j ${BUILD_THREADS} && make install
+
+ENV OR1KSIM_HOME=/usr/local/lib
+
+# we also need the toolchain to verify that we can get binaries for or1k
+RUN wget https://github.com/openrisc/newlib/releases/download/v2.3.0-1/or1k-elf-multicore_gcc5.2.0_binutils2.26_newlib2.3.0-1_gdb7.11.tgz
+RUN tar xvf or1k-elf-multicore_gcc5.2.0_binutils2.26_newlib2.3.0-1_gdb7.11.tgz
+ENV PATH=/or1k-elf-multicore/bin:${PATH}
+RUN echo $OR1KSIM_HOME >> /etc/ld.so.conf && ldconfig
+
+
+# Bin-utils required by ARTIQ
+RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.27.tar.bz2
+RUN tar xvf binutils-2.27.tar.bz2
+RUN cd binutils-2.27 && \
+    curl -L 'https://raw.githubusercontent.com/m-labs/conda-recipes/c3effbc26e96c6e246d6e8035f8a07bc52d8ded1/conda/binutils-or1k-linux/fix-R_OR1K_GOTOFF-relocations.patch' | patch -p1 && \
+    mkdir build && cd build && \
+    ../configure --target=or1k-linux --prefix=/usr/local
+RUN cd binutils-2.27/build && make -j${BUILD_THREADS} && make install
+
+# Hotfix for installing projectq https://github.com/ProjectQ-Framework/ProjectQ/issues/323
+# pip tries to install pybind11 after projectq is installed,
+# despite being one of projectq's dependencies
+RUN pip3 install --no-cache-dir pybind11
+
+# We are manually installing the package dependencies instead of importing the packages via pip to enable live
+# changes.
+COPY ./deltalanguage/environment/install_requirements.txt /opt/dl_install_requirements.txt
+RUN pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir -r /opt/dl_install_requirements.txt
+COPY ./deltalanguage/environment/dev_requirements.txt /opt/dl_dev_requirements.txt
+RUN pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir -r /opt/dl_dev_requirements.txt
+COPY ./deltalanguage/environment/visualisation_requirements.txt /opt/dl_visualisation_requirements.txt
+RUN pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir -r /opt/dl_visualisation_requirements.txt
+ENV PYTHONPATH=${PYTHONPATH}:/workdir/deltalanguage
+
+ENV PYTHONPATH=${PYTHONPATH}:/workdir/deltasimulator
+COPY ./deltasimulator/environment/install_requirements.txt /opt/ds_install_requirements.txt
+# Remove deltalanguage dependencies
+RUN sed '/deltalanguage/d' /opt/ds_install_requirements.txt >> /opt/ds_install_requirements_updated.txt  
+RUN pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir -r /opt/ds_install_requirements_updated.txt
+COPY ./deltasimulator/environment/dev_requirements.txt /opt/ds_dev_requirements.txt
+RUN pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir -r /opt/ds_dev_requirements.txt
+ENV PYTHONPATH=${PYTHONPATH}:/workdir/deltasimulator
+
+# For GitHub Pages
+COPY ./environment/dev_requirements.txt /opt/
+RUN pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir -r /opt/dev_requirements.txt
+
+ENV DEBIAN_FRONTEND=noninteractive

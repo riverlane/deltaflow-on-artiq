@@ -2,6 +2,7 @@
 # --------------- MAKEFILE FOR DELTAFLOW-ON-ARTIQ ----------------------------#
 # ----------------------------------------------------------------------------#
 
+VERSION="0.3.3"
 
 # --------------- DECLARATIONS -----------------------------------------------#
 
@@ -65,8 +66,7 @@ ifeq ($(FORDOCS), $(filter $(FORDOCS), docs dev-docs))
   $(eval $(DOCS_ARGS):;@:)
 endif
 
-# --------------- DOCKER STUFF -----------------------------------------------#
-
+# --------------- DOCKER IMAGES -----------------------------------------------#
 
 .PHONY: image
 image: environment/Dockerfile
@@ -75,20 +75,19 @@ image: environment/Dockerfile
 	--build-arg USERNAME=${USERNAME} \
 	--build-arg USER_UID=${USER_UID} \
 	--build-arg USER_GID=${USER_GID} \
-	--file environment/Dockerfile
+	--build-arg VERSION=${VERSION} \
+	--file $<
 
-# build a docker image called image-* from a dockerfile environment/Dockerfile-*
-image-%: environment/Dockerfile-%
-	docker build ./environment \
-	-t $@ \
-	--network=host \
+.PHONY: image-artiq-nix
+image-artiq-nix: environment/Dockerfile-artiq-nix
+	docker build . \
+	--tag image-artiq-nix \
 	--build-arg USERNAME=${USERNAME} \
 	--build-arg USER_UID=${USER_UID} \
 	--build-arg USER_GID=${USER_GID} \
-	-f $<
+	--build-arg VERSION=${VERSION} \
+	--file $<
 
-LPWD = $(shell pwd)
-WPWD = $(shell cygpath -w ${PWD})
 container:
 	make image
 	docker run \
@@ -105,24 +104,13 @@ container:
 shell: container
 	docker exec -it $(shell cat container) /bin/bash
 
-shell-tools: image-tools
-	docker run --rm -it -v `pwd`:/workdir -w /workdir image-tools /bin/bash
-
-
 ADRUN=docker run --rm -v `pwd`:/workdir -w /workdir image-artiq-nix
 
 .PHONY: ashell
 ashell: image-artiq-nix
 	${ADRUN}
 
-.PHONY: anotebook
-anotebook: image-artiq-nix
-	docker run \
-	-it --rm \
-	-v `pwd`:/workdir \
-	-w /workdir \
-	${IMAGENAME}-artiq \
-	bash -c ". ~/.profile && jupyter notebook"
+# ----------- Environment Configuration ------------------------------------------#
 
 CPPFLAGS=-std=c++17 \
 	-DSC_CPLUSPLUS=201703L \
@@ -153,6 +141,9 @@ PYLINK=/usr/local/lib/python3.8/config-3.8-x86_64-linux-gnu/libpython3.8.a \
 VERILATOR_TRACE_FILES=${VERILATOR_BASE}/include/verilated.cpp \
 	${VERILATOR_BASE}/include/verilated_vcd_c.cpp \
 	${VERILATOR_BASE}/include/verilated_vcd_sc.cpp
+
+
+# ----------- Runtime targets  ------------------------------------------#
 
 # add sub-makefiles to keep the build logic or examples and tests somewhat confined
 include emulator/or-tlm/Makefile
@@ -211,6 +202,25 @@ vpath %.cpp $(dir ${CPP_SOURCES})
 build/%.o: %.cpp container
 	${DEXEC} g++ ${CPPFLAGS} ${INCLUDE} -o $@ -c $<
 
+# --------------- DEVELOPERS ----------------------------------------------#
+
+.PHONY: dev-image
+dev-image: environment/dev.Dockerfile-image
+	docker build --no-cache . \
+	--tag ${IMAGENAME} \
+	--build-arg USERNAME=${USERNAME} \
+	--build-arg USER_UID=${USER_UID} \
+	--build-arg USER_GID=${USER_GID} \
+	--file $<
+
+.PHONY: dev-image-nix
+dev-image-nix: environment/dev.Dockerfile-image-nix
+	docker build --no-cache . \
+	--tag ${IMAGENAME} \
+	--build-arg USERNAME=${USERNAME} \
+	--build-arg USER_UID=${USER_UID} \
+	--build-arg USER_GID=${USER_GID} \
+	--file $<
 
 # --------------- DOCUMENTATION ----------------------------------------------#
 

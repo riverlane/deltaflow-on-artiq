@@ -1,0 +1,24 @@
+FROM nixos/nix:2.3.6
+
+# RUN nix-shell -I artiqSrc=path_to_artiq_sources shell-dev.nix
+#
+RUN nix-channel --add https://nixbld.m-labs.hk/channel/custom/artiq/full-beta/artiq-full && \
+    nix-channel --remove nixpkgs && \
+    nix-channel --add https://nixos.org/channels/nixos-20.03 nixpkgs && \
+    nix-channel --update
+
+RUN mkdir -p /root/.config/nix/ && \
+    echo "substituters = https://cache.nixos.org https://nixbld.m-labs.hk" >> ~/.config/nix/nix.conf && \
+    echo "trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nixbld.m-labs.hk-1:5aSRVA5b320xbNvu30tqxVPXpld73bhtOeH6uAjRyHc=" >> ~/.config/nix/nix.conf
+
+RUN nix-env -i git
+RUN git clone https://github.com/m-labs/artiq
+RUN cd artiq && git checkout 9822b88d9b0a5ee33caad8b9b5461d472ac7acb4
+#RUN cd artiq && git checkout release-5
+RUN git clone https://git.m-labs.hk/m-labs/nix-scripts
+RUN cd nix-scripts && git checkout bd8fa5d955340799bdea3e2998c50b6a00e1fe82
+# 46388263c4b3600b8b5a97bd85597375825ecb1d
+RUN nix-shell -I artiqSrc=/artiq nix-scripts/artiq-fast/shell-dev.nix
+
+CMD ["nix-shell", "-I", "artiqSrc=/artiq", "/nix-scripts/artiq-fast/shell-dev.nix"]
+

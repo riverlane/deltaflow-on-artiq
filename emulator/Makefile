@@ -77,11 +77,9 @@ build/liteeth/liteeth.v: src/SoCBuilder/build_liteeth.py container
 										 -Wno-lint
 
 
-DRUN_TOOLS=docker run --rm -v `pwd`:/workdir -w /workdir image-tools
-
-
-build/textrst.bin: emulator/jump.S image-tools
-	${DRUN_TOOLS} or1k-linux-as emulator/jump.S -o build/jump.o
-	${DRUN_TOOLS} or1k-linux-objcopy build/jump.o --dump-section .text=build/textrst.bin
+.ONESHELL: build/textrst.bin
+build/textrst.bin: emulator/jump.S container
+	${DEXEC} or1k-linux-as emulator/jump.S -o build/jump.o
+	${DEXEC} or1k-linux-objcopy build/jump.o --dump-section .text=build/textrst.bin
 
 

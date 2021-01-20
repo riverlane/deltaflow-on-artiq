@@ -8,10 +8,12 @@ Supported Platforms
 -------------------
 
 Deltaflow-on-ARTIQ has been tested on Ubuntu 18.04 and 20.04 and on
-MacOS 10.15.15+. For Mac users we recommend to configure your Docker Desktop
+MacOS 10.15.15+. 
+
+For Mac users we recommend to configure your Docker Desktop
 to use at least 4 **CPUs**, 4GB of **Memory** and allow more than 30GB for your 
 **Disk Image size**. 
-Deltaflow-on-ARTIQ has currently not been tested on Windows.
+Deltaflow-on-ARTIQ has not been tested yet on Windows.
 
 First steps
 -----------
@@ -36,33 +38,18 @@ We have currently made the decision of keeping |Deltalanguage|_,
 |Deltasimulator|_ as submodules for visibility but in the future they will
 likely be integrated as python packages.
 
-Creation of the Docker images
+Container images
 -----------------------------
 
-The easiest way to create the necessary Docker images is by running
-the example commands explained in :doc:`examples`.
-
-The first time the commands are executed they will look for the required Docker
-images and if not found create them.
-To summarize the commands:
-
-.. code-block:: console     
-
-    make run-deltagraph
-    make run-deltasimulator
-    make run-kasli-emulator
-
-The latter one will take a significant longer amount of time as it compiles
-and installs all the ARTIQ backend and dependecies. 
-Expect an installation duration longer than 1 hr.
-Each next iteration will be significantly faster as all binaries are
-precompiled.
+We provide pre-generated Docker images to minimise the installation time. 
+We discourage you from modifying the tag version of the docker image (defined in the 
+base Makefile) to keep your environment in line with the release tag of the repository.
 
 Following executions
 --------------------
 
-When a Docker image is generated the following calls to the same command will
-be executed straigth away with no significant time overhead.
+After an initial fetch of the docker container image the following calls to 
+the same command will be executed straigth away with no significant time overhead.
 
 Feel free to clear your environment via:
 
@@ -73,7 +60,7 @@ Feel free to clear your environment via:
 
 .. note::
     
-    This command would not remove the Docker images previously created.
+    This command would not remove the Docker images previously downloaded.
     It will just remove the container index files that point to them.
 
 .. |Deltalanguage| replace:: **Deltalanguage**

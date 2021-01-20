@@ -27,37 +27,12 @@ Deltaflow let's you design heterogeneous applications in a modular fashion.
 It let you squeeze the most out of your hardware using a simple language and
 it gives you the flexibility needed to integrate to your existing control stack.
 
-## Prerequisite
+## Documentation
 
-The `Artiq Emulator` environment has been tested on Linux and Mac. Windows is currently not supported. 
-`Artiq Emulator` relies almost exclusively on Docker (Docker Desktop on MAC) to maximise portability. 
-Said that, we recommend a relatively recent machine to go through the various compilation steps.
+All the documentation can be found at [Documentation](https://riverlane.github.io/deltaflow-on-artiq).
+This comprises installation, demos and explanations of the main building blocks.
 
-## Installing ARTIQ Emulator
-
-As a first step you might need to init/update all the submodules.
-
-```console
-river@lane:~$ cd deltaflow-on-artiq
-river@lane:~/deltaflow-on-artiq$ git submodule update --init --recursive
-```
-
-To create all the docker images you can run:
-
-```console
-river@lane:~$ cd deltaflow-on-artiq
-river@lane:~/deltaflow-on-artiq$ make run-kasli-emulator
-```
-
-
-The creation of the docker containers currently takes about 2-3 hrs on standard machines.
-
-## Using ARTIQ Emulator
-
-The user can execute three primary [demos](demos/README.md) that show a typical Deltaflow
-development process
-
-## License
+## Licensing
 
 Please refer to the respective licenses:
 
