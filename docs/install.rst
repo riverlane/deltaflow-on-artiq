@@ -15,8 +15,11 @@ to use at least 4 **CPUs**, 4GB of **Memory** and allow more than 30GB for your
 **Disk Image size**. 
 Deltaflow-on-ARTIQ has not been tested yet on Windows.
 
-First steps
------------
+Workflow
+========
+
+Obtain the code
+---------------
 
 At first clone the repo:
 
@@ -45,11 +48,17 @@ We provide pre-generated Docker images to minimise the installation time.
 We discourage you from modifying the tag version of the docker image (defined in the 
 base Makefile) to keep your environment in line with the release tag of the repository.
 
+To obtain a local version of the image run:
+
+.. code-block:: console
+     
+    make image
+
 Following executions
 --------------------
 
-After an initial fetch of the docker container image the following calls to 
-the same command will be executed straigth away with no significant time overhead.
+After an initial fetch of the docker image you can run our demos in any order.
+Please refer to the next section in the manual.
 
 Feel free to clear your environment via:
 
@@ -62,6 +71,7 @@ Feel free to clear your environment via:
     
     This command would not remove the Docker images previously downloaded.
     It will just remove the container index files that point to them.
+
 
 .. |Deltalanguage| replace:: **Deltalanguage**
 .. _Deltalanguage: https://riverlane.github.io/deltalanguage

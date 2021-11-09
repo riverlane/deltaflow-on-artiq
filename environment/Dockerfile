@@ -2,6 +2,10 @@ ARG VERSION
 
 FROM ghcr.io/riverlane/deltaflow-on-artiq:${VERSION}
 
+# Quick fix for https://github.com/ProjectQ-Framework/ProjectQ/issues/406
+RUN pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir projectq==0.7
+
 ARG USERNAME
 ARG USER_UID
 ARG USER_GID

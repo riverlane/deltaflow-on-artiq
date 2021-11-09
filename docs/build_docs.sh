@@ -23,8 +23,10 @@ echo ${PYTHONPATH}
 # In order to add a new version to docs
 # add it to DOCSVERSIONS following a whitespace
 # Make sure dev is the last one as it has the latest version of conf.py
+# LATESTVERSION is also used as the default version
 # TODO: automate this process
-DOCSVERSIONS="v0.3.3 dev"
+LATESTVERSION="v0.3.4"
+DOCSVERSIONS="${LATESTVERSION} dev"
 export DOCSVERSIONS=${DOCSVERSIONS}
 # This variable is defined in docs/Makefile
 # TODO: remover redundant repetition
@@ -102,10 +104,10 @@ cat > index.html <<EOF
 <html>
    <head>
       <title>${REPO_NAME} docs</title>
-      <meta http-equiv = "refresh" content="0; url='/${REPO_NAME}/dev/'" />
+      <meta http-equiv = "refresh" content="0; url='/${REPO_NAME}/${LATESTVERSION}/'" />
    </head>
    <body>
-      <p>Please wait while you're redirected to our <a href="/${REPO_NAME}/dev/">documentation</a>.</p>
+      <p>Please wait while you're redirected to our <a href="/${REPO_NAME}/${LATESTVERSION}/">documentation</a>.</p>
    </body>
 </html>
 EOF
